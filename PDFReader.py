@@ -83,26 +83,75 @@ def open_file(filename,pageNum):
     text = ""
     stack = []
 
-    pageNum -= 1
+    rng = pageNum.split("-")
+    if len(rng) == 2:
+        first,last = [int(x) for x in rng]
+        first -= 1
 
-    with open(filename + ".pdf", 'rb') as f:
-        parser = PDFParser(f)
-        doc = PDFDocument(parser)
-        page = list(PDFPage.create_pages(doc))[pageNum]
-        rsrcmgr = PDFResourceManager()
-        device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
-        interpreter = PDFPageInterpreter(rsrcmgr, device)
-        interpreter.process_page(page)
-        layout = device.get_result()
+        with open(filename + ".pdf", 'rb') as f:
+            parser = PDFParser(f)
+            doc = PDFDocument(parser)
+            pages = list(PDFPage.create_pages(doc))[first:last]
+            for p in pages:
+                rsrcmgr = PDFResourceManager()
+                device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
+                interpreter = PDFPageInterpreter(rsrcmgr, device)
+                interpreter.process_page(p)
+                layout = device.get_result()
 
-        for obj in layout:
-            if isinstance(obj, LTTextBox):
-                text += obj.get_text()
+                for obj in layout:
+                    if isinstance(obj, LTTextBox):
+                        text += obj.get_text()
 
-            elif isinstance(obj, LTFigure):
-                stack += list(obj)
+                    elif isinstance(obj, LTFigure):
+                        stack += list(obj)
     
-    text_box.insert(END, text)
+        text_box.insert(END, text)
+
+    elif len(rng) == 1:
+        try:
+            pageNum = int(rng[0]) -1 
+
+            with open(filename + ".pdf", 'rb') as f:
+                parser = PDFParser(f)
+                doc = PDFDocument(parser)
+                page = list(PDFPage.create_pages(doc))[pageNum]
+                rsrcmgr = PDFResourceManager()
+                device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
+                interpreter = PDFPageInterpreter(rsrcmgr, device)
+                interpreter.process_page(page)
+                layout = device.get_result()
+
+                for obj in layout:
+                    if isinstance(obj, LTTextBox):
+                        text += obj.get_text()
+
+                    elif isinstance(obj, LTFigure):
+                        stack += list(obj)
+            
+            text_box.insert(END, text)
+        except Exception:
+            with open(filename + ".pdf", 'rb') as f:
+                parser = PDFParser(f)
+                doc = PDFDocument(parser)
+                pages = list(PDFPage.create_pages(doc))
+                for p in pages:
+                    rsrcmgr = PDFResourceManager()
+                    device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
+                    interpreter = PDFPageInterpreter(rsrcmgr, device)
+                    interpreter.process_page(p)
+                    layout = device.get_result()
+
+                    for obj in layout:
+                        if isinstance(obj, LTTextBox):
+                            text += obj.get_text()
+
+                        elif isinstance(obj, LTFigure):
+                            stack += list(obj)
+        
+            text_box.insert(END, text)
+
+
 
 
 engine = pyttsx3.init()
@@ -124,7 +173,7 @@ text_box.place(relwidth = 0.975, relheight=1)
 
 frame_3 = Frame(root, bg = BACKGROUND_FRAME, bd = 5)
 frame_3.place(relx = 0.5, rely = 0.65, relwidth = 0.5, relheight = 0.15, anchor="n")
-open_button = Button(frame_3, text="Open File", bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON, command= lambda:open_file(entry_1.get(),int(entry_2.get())))
+open_button = Button(frame_3, text="Open File", bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON, command= lambda:open_file(entry_1.get(),entry_2.get()))
 open_button.place(relx=0.6, rely = 0.5, relwidth=0.4,relheight=0.4)
 label_1 = Label(frame_3, bg = BACKGROUND_BUTTON, text = "Filename", fg=FOREGROUND_BUTTON)
 label_1.place(relwidth=0.2,relheight=0.4)
