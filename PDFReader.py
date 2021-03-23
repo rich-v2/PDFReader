@@ -73,9 +73,13 @@ def sel_lang(var):
     for voice in voices:
         if var == "English" and re.search("English", voice.name):
             engine.setProperty('voice', voice.id)
+            label_german.place_forget()
+            label_english.place(relx=0,rely = 0.7, relwidth=0.25,relheight=0.25)
             break
         if var == "German" and re.search("German", voice.name):
             engine.setProperty('voice', voice.id)
+            label_english.place_forget()
+            label_german.place(relx=0.75,rely = 0.7, relwidth=0.25,relheight=0.25)
             break
 
 
@@ -166,6 +170,12 @@ label_background.place(relx=0.5, relwidth=1,relheight=1, anchor = "n")
 frame_1 = Frame(root, bg = BACKGROUND_FRAME, bd = 5)
 frame_1.place(relx = 0.5, rely = 0, relwidth = 0.8, relheight = 0.6, anchor = "n")
 text_box = Text(frame_1, font="consolas 14",bd=5)
+text_box.insert(END, "Welcome to the library.\n\nOur employees would be happy to read something to you.\n" + \
+    "You can paste text in this entry field, or use the form below to load a pdf file.\n\n" +\
+        "Just locate the file in the same directory and supply the librarian with the filename " \
+            "and the range of pages.\nIf you don't say anything, all will be read.\n\n" + \
+        "If your desired reading material is loaded, just hit the 'Read aloud' button and listen " + \
+            "to our soothing voices.")
 scrollb = Scrollbar(frame_1, command = text_box.yview)
 scrollb.place(relx = 0.975,relwidth = 0.025,relheight=1)
 text_box['yscrollcommand'] = scrollb.set
@@ -179,7 +189,7 @@ label_1 = Label(frame_3, bg = BACKGROUND_BUTTON, text = "Filename", fg=FOREGROUN
 label_1.place(relwidth=0.2,relheight=0.4)
 entry_1 = Entry(frame_3)
 entry_1.place(relx=0.2,relwidth=0.8,relheight=0.4)
-label_2 = Label(frame_3, text = "Page",bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON)
+label_2 = Label(frame_3, text = "Pages",bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON)
 label_2.place(relx=0, rely = 0.5, relwidth=0.2,relheight=0.4)
 entry_2 = Entry(frame_3)
 entry_2.place(relx=0.2, rely = 0.5, relwidth=0.2,relheight=0.4)
@@ -211,6 +221,22 @@ radio_2 = Radiobutton(frame_4,text = "German", variable=VAR, value = "German")
 radio_2.place(relx=0.5,relwidth=0.25,relheight=1)
 language_button = Button(frame_4,text ="Apply", command=lambda: sel_lang(VAR.get()),bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON)
 language_button.place(relx=0.75,relwidth=0.25,relheight=1)
+
+
+german = ImageTk.PhotoImage(Image.open(os.path.join("Assets","german.jpg")))  # PIL solution
+label_german = Label(root, image=german)
+
+
+english = ImageTk.PhotoImage(Image.open(os.path.join("Assets","Freeman.jpg")))  # PIL solution
+label_english = Label(root, image=english)
+
+voices = engine.getProperty('voices')
+for voice in voices:
+    if re.search("English", voice.name):
+        engine.setProperty('voice', voice.id)
+        label_german.place_forget()
+        label_english.place(relx=0,rely = 0.7, relwidth=0.25,relheight=0.25)
+        break
 
 if __name__== "__main__":
     mainloop()
