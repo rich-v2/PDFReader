@@ -11,7 +11,8 @@ from pdfminer.pdfparser import PDFParser
 import re
 import os
 
-root = Tk()
+root = Tk(className="pdfReader")
+root.title = "PDFReader"
 
 WIDTH, HEIGHT = 800, 500
 VAR = StringVar()
@@ -30,7 +31,6 @@ class Speaking(threading.Thread):
                 word = self.words.pop(0)
                 engine.say(word)
                 engine.runAndWait()
-        print("finished")
         self.running = False
 
     def stop(self):
@@ -155,4 +155,5 @@ radio_2.place(relx=0.5,relwidth=0.25,relheight=1)
 language_button = Button(frame_4,text ="Apply", command=lambda: sel_lang(VAR.get()),bg = "#d1c221")
 language_button.place(relx=0.75,relwidth=0.25,relheight=1)
 
-mainloop()
+if __name__== "__main__":
+    mainloop()
