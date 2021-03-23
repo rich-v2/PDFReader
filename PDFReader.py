@@ -25,7 +25,7 @@ FOREGROUND_BUTTON = "white"
 class Speaking(threading.Thread):
     def __init__(self, sentence, **kw):
         super().__init__(**kw)
-        self.words = sentence.split(".")
+        self.words = sentence.split("\n")
         self.paused = False
 
     def run(self):
@@ -117,7 +117,10 @@ label_background.place(relx=0.5, relwidth=1,relheight=1, anchor = "n")
 frame_1 = Frame(root, bg = BACKGROUND_FRAME, bd = 5)
 frame_1.place(relx = 0.5, rely = 0, relwidth = 0.8, relheight = 0.6, anchor = "n")
 text_box = Text(frame_1, font="consolas 14",bd=5)
-text_box.place(relwidth = 1, relheight=1)
+scrollb = Scrollbar(frame_1, command = text_box.yview)
+scrollb.place(relx = 0.975,relwidth = 0.025,relheight=1)
+text_box['yscrollcommand'] = scrollb.set
+text_box.place(relwidth = 0.975, relheight=1)
 
 frame_3 = Frame(root, bg = BACKGROUND_FRAME, bd = 5)
 frame_3.place(relx = 0.5, rely = 0.65, relwidth = 0.5, relheight = 0.15, anchor="n")
