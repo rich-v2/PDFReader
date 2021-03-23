@@ -70,7 +70,7 @@ def sel_lang(var):
         if var == "English" and re.search("English", voice.name):
             engine.setProperty('voice', voice.id)
             break
-        if var == "German" and re.search("German"):
+        if var == "German" and re.search("German", voice.name):
             engine.setProperty('voice', voice.id)
             break
 
