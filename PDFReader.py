@@ -25,6 +25,7 @@ FOREGROUND_BUTTON = "white"
 class Speaking(threading.Thread):
     def __init__(self, sentence, **kw):
         super().__init__(**kw)
+        sentence = " ".join(sentence.split())
         self.words = sentence.split(".")
         self.paused = False
 
@@ -105,7 +106,7 @@ def open_file(filename,pageNum):
 
                 for obj in layout:
                     if isinstance(obj, LTTextBox):
-                        text += obj.get_text().replace("\n","")
+                        text += obj.get_text()
 
                     elif isinstance(obj, LTFigure):
                         stack += list(obj)
@@ -128,7 +129,7 @@ def open_file(filename,pageNum):
 
                 for obj in layout:
                     if isinstance(obj, LTTextBox):
-                        text += obj.get_text().replace("\n","")
+                        text += obj.get_text()
 
                     elif isinstance(obj, LTFigure):
                         stack += list(obj)
@@ -148,7 +149,7 @@ def open_file(filename,pageNum):
 
                     for obj in layout:
                         if isinstance(obj, LTTextBox):
-                            text += obj.get_text().replace("\n","")
+                            text += obj.get_text()
 
                         elif isinstance(obj, LTFigure):
                             stack += list(obj)
