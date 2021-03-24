@@ -170,7 +170,7 @@ label_background.place(relx=0.5, relwidth=1,relheight=1, anchor = "n")
 
 frame_1 = Frame(root, bg = BACKGROUND_FRAME, bd = 5)
 frame_1.place(relx = 0.5, rely = 0, relwidth = 0.8, relheight = 0.6, anchor = "n")
-text_box = Text(frame_1, font="consolas 14",bd=5)
+text_box = Text(frame_1, font="consolas 14",bd=5, wrap=WORD)
 text_box.insert(END, "Welcome to the library.\n\nOur employees would be happy to read something to you.\n" + \
     "You can paste text in this entry field, or use the form below to load a pdf file.\n\n" +\
         "Just locate the file in the same directory and supply the librarian with the filename " \
