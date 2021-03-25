@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from PIL import ImageTk, Image
 import pyttsx3
 import threading
@@ -8,6 +9,7 @@ from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from pdfminer.pdfpage import PDFPage, PDFTextExtractionNotAllowed
 from pdfminer.pdfparser import PDFParser
+import pyperclip
 import re
 import os
 
@@ -93,7 +95,7 @@ def open_file(filename,pageNum):
         first,last = [int(x) for x in rng]
         first -= 1
 
-        with open(filename + ".pdf", 'rb') as f:
+        with open(filename, 'rb') as f:
             parser = PDFParser(f)
             doc = PDFDocument(parser)
             pages = list(PDFPage.create_pages(doc))[first:last]
@@ -117,7 +119,7 @@ def open_file(filename,pageNum):
         try:
             pageNum = int(rng[0]) -1 
 
-            with open(filename + ".pdf", 'rb') as f:
+            with open(filename, 'rb') as f:
                 parser = PDFParser(f)
                 doc = PDFDocument(parser)
                 page = list(PDFPage.create_pages(doc))[pageNum]
@@ -136,7 +138,7 @@ def open_file(filename,pageNum):
             
             text_box.insert(END, text)
         except Exception:
-            with open(filename + ".pdf", 'rb') as f:
+            with open(filename, 'rb') as f:
                 parser = PDFParser(f)
                 doc = PDFDocument(parser)
                 pages = list(PDFPage.create_pages(doc))
@@ -156,7 +158,8 @@ def open_file(filename,pageNum):
         
             text_box.insert(END, text)
 
-
+def paste_clip():
+    text_box.insert(END,pyperclip.paste())
 
 
 engine = pyttsx3.init()
@@ -185,10 +188,15 @@ text_box.place(relwidth = 0.975, relheight=1)
 frame_3 = Frame(root, bg = BACKGROUND_FRAME, bd = 5)
 frame_3.place(relx = 0.5, rely = 0.65, relwidth = 0.5, relheight = 0.15, anchor="n")
 open_button = Button(frame_3, text="Open File", bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON, command= lambda:open_file(entry_1.get(),entry_2.get()))
-open_button.place(relx=0.6, rely = 0.5, relwidth=0.4,relheight=0.4)
+open_button.place(relx=0.6, rely = 0.5, relwidth=0.2,relheight=0.4)
+
+paste_button = Button(frame_3,text="Paste", command= lambda: paste_clip(), bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON)
+paste_button.place(relx=0.8, rely = 0.5, relwidth=0.2,relheight=0.4)
+
 label_1 = Label(frame_3, bg = BACKGROUND_BUTTON, text = "Filename", fg=FOREGROUND_BUTTON)
 label_1.place(relwidth=0.2,relheight=0.4)
-entry_1 = Entry(frame_3)
+files = [x for x in os.listdir() if re.search(".pdf",x)]
+entry_1 = ttk.Combobox(frame_3, values = files)
 entry_1.place(relx=0.2,relwidth=0.8,relheight=0.4)
 label_2 = Label(frame_3, text = "Pages",bg = BACKGROUND_BUTTON, fg=FOREGROUND_BUTTON)
 label_2.place(relx=0, rely = 0.5, relwidth=0.2,relheight=0.4)
